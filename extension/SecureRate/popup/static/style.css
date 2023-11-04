@@ -1,0 +1,120 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #4d4949;
+  width: 400px;
+  height: 600px;
+  overflow: hidden;
+  font-size: 11px; /* Increased by 10% */
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  padding: 3px; /* Increased by 10% */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+  background-color: #ffffff;
+  color: #4d4949;
+  padding: 3px; /* Increased by 10% */
+}
+
+.header img {
+  width: 27px; /* Increased by 10% */
+  height: 27px; /* Increased by 10% */
+}
+
+.left-panel,
+.right-panel,
+.status-panel {
+  padding: 3px; /* Increased by 10% */
+  background-color: #faf2e3;
+  margin: 2px;
+  border-radius: 3px; /* Increased by 10% */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  flex: 0.8;
+  overflow: auto;
+}
+
+.alert {
+  padding: 3px; /* Increased by 10% */
+  margin: 2px 0;
+  border-radius: 3px; /* Increased by 10% */
+  font-size: 11px; /* Increased by 10% */
+}
+
+.grade {
+  font-size: 26px; /* Increased by 10% */
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px; /* Increased by 10% */
+  height: 22px; /* Increased by 10% */
+  margin-left: 6px; /* Increased by 10% */
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 22px; /* Increased by 10% */
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; /* Increased by 10% */
+  width: 18px; /* Increased by 10% */
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px); /* Increased by 10% */
+}
+
+.toggle-overlay {
+  font-size: 11px; /* Increased by 10% */
+  font-weight: bold;
+  display: inline-block;
+}
+
+.slider-container {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.small-icon {
+  width: 16px;  /* Adjust size as needed */
+  height: 16px; /* Adjust size as needed */
+  vertical-align: middle;
+  margin-right: 4px;
+}
+

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block metatags %}
+<title>Download | SecureRate</title>
+<meta name="description" content="Testing modal forms">
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+  <div>
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{url_for('bl_home.index')}}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Download</li>
+    </ol>
+  </div>
+  
+  <h1>Download</h1>
+  <p class="lead"><a href="{{ url_for('bl_download.download_file') }}">Download the latest version of SecureRate.</a></p>
+  <p>SecureRate is currently in active development. We are working hard to bring you the best possible experience. However meanwhile we hope you enjoy our demo version.</p>
+  <p><i class="bi bi-github"></i> Get the code on GitLab <a href="https://gitlab.com/securerate/securerate" target="_blank">here</a>.</p>
+  <p><i class="bi bi-info-circle-fill"></i> Read all the relevant information <a href="https://gitlab.com/securerate/securerate#readme" target="_blank">here</a>.</p>
+  <p><i class="bi bi-exclamation-circle-fill"></i> Please note that SecureRate is currently only available for Google Chrome.</p>
+  
+</div>
+{% endblock %}

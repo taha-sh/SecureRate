@@ -1,0 +1,62 @@
+{
+  "name": "SecureRate",
+  "version": "0.8",
+  "description": "Get a security score and tips to improve your online safety.",
+  "manifest_version": 3,
+  "permissions": [
+    "storage",
+    "declarativeContent",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "cookies"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*",
+    "https://mozilla.cloudflare-dns.com/*",
+    "https://haveibeenpwned.com/*",
+    "https://malware-filter.gitlab.io/*",
+    "https://api.2fa.directory/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["popup/scripts/updateUserInterface.js", "popup/scripts/injectoverlay.js"],
+      "run_at": "document_start"    }
+  ],
+  "action": {
+    "default_popup": "popup/index.html",
+    "default_title": "SecureRate",
+    "default_icon": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "popup/scripts/initializeExtension.js",
+        "popup/scripts/fetchPhishingData.js",
+        "popup/scripts/fetchMaliciousData.js",
+        "popup/scripts/fetchBreachedSitesData.js",
+        "popup/scripts/fetch2FAData.js",
+        "popup/scripts/websiteSecurityAnalysis.js",
+        "popup/scripts/updateUserInterface.js",
+        "popup/scripts/injectoverlay.js",
+        "popup/scripts/toggleOverlay.js",
+        "icons/*"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ]
+}

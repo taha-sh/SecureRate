@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block metatags %}
+{% endblock %}
+
+{% block contents %}
+	<div class="container">
+		<div>
+			<ol class="breadcrumb small">
+				<li class="breadcrumb-item"><a href="{{url_for('bl_home.index')}}">Home</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Privacy Notice</li>
+			</ol>
+		</div>
+	
+		<h1>Privacy Notice</h1>
+		<p class="lead">At SecureRate, we value your privacy and are committed to protecting it.</p>
+		
+		<h3>Open Source Commitment</h3>
+		<p>SecureRate is a Free and Open Source Software (FOSS). This means you can review our source code, contribute to it, and be assured that there are no hidden functionalities that compromise your privacy.</p>
+		
+		<h3>Data Storage and Usage</h3>
+		<p>All data collected by SecureRate is stored locally on your device. We do not collect, store, or transmit your data to any external servers. Your data remains in your control at all times.</p>
+		
+		<h3>What Data Do We Collect?</h3>
+		<p>We do not collect any personal or sensitive data. SecureRate only collects data that is essential for its functionalities, and this data is stored locally on your device.</p>
+		
+		<h3>Third-Party Libraries</h3>
+		<p>SecureRate may use third-party libraries for certain functionalities. However, these libraries have been vetted for privacy concerns.</p>
+		
+		<h3>Changes to This Privacy Notice</h3>
+		<p>We may update our Privacy Notice from time to time. Any changes will be posted on this page.</p>
+		
+		<h3>Contact Us</h3>
+		<p>If you have any questions about this Privacy Notice, please contact us.</p>
+	</div>
+{% endblock %}

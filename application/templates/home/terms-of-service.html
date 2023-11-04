@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block metatags %}
+{% endblock %}
+
+{% block contents %}
+	<div class="container">
+		<div>
+			<ol class="breadcrumb small">
+				<li class="breadcrumb-item"><a href="{{url_for('bl_home.index')}}">Home</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Terms of Service</li>
+			</ol>
+		</div>
+	
+		<h1>Terms of Service</h1>
+		<p class="lead">Please read these Terms of Service carefully before using SecureRate.</p>
+		
+		<h2>Acceptance of Terms</h2>
+		<p>By using SecureRate, you agree to comply with and be bound by these Terms of Service.</p>
+		
+		<h2>License</h2>
+		<p>SecureRate is Free and Open Source Software (FOSS). You are free to use, modify, and distribute the software under the terms of the applicable open-source license.</p>
+		
+		<h2>Data Storage</h2>
+		<p>All data collected by SecureRate is stored locally on your device. We do not have access to this data, nor do we store it on external servers.</p>
+		
+		<h2>Limitation of Liability</h2>
+		<p>We are not liable for any damages or losses related to your use of the service. We do not guarantee the accuracy or reliability of SecureRate and disclaim all liability for any damages resulting from its use.</p>
+		
+		<h2>Changes to Terms</h2>
+		<p>We reserve the right to modify these Terms of Service at any time. Changes will be posted on this page, and it is your responsibility to review them regularly.</p>
+		
+		<h2>Contact</h2>
+		<p>If you have any questions about these Terms of Service, please contact us.</p>
+	</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block metatags %}
+  <title>FAQ | SecureRate</title>
+  <meta name="description" content="Frequently Asked Questions about SecureRate">
+{% endblock %}
+
+{% block contents %}
+  <div class="container">
+    <div>
+      <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{url_for('bl_home.index')}}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{url_for('bl_docs.docs')}}">Docs</a></li>
+        <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+      </ol>
+    </div>
+
+    <h1>{{page_title}}</h1>
+    <p class="lead">Find answers to commonly asked questions about SecureRate.</p>
+
+    <div class="accordion" id="faqAccordion">
+      <!-- Question 1 -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <strong>What is SecureRate?</strong>
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            SecureRate is a security tool designed to protect your online activities. It does this by analyzing a website on various security parameters and providing you with a security score. SecureRate also provides you with recommendations on how to improve your security score.
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <strong>How do I install SecureRate?</strong>
+          </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            You can download SecureRate from the download page and following the installation guide.
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <strong>Is SecureRate available for all browsers?</strong>
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Currently, SecureRate is available only for Google Chrome and other Chromium-based browsers.
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingFour">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+            <strong>How do I report a bug?</strong>
+          </button>
+        </h2>
+        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            You can report bugs on the GitLab page.
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- Question 5 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                  <strong>How does SecureRate provide a rating?</strong>
+                </button>
+              </h2>
+              <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  SecureRate gives a rating based on the following parameters:
+                  <ul>
+                    <li>Phishing: Is a site a known phishing website?</li>
+                    <li>Malicious: Is a site known as a malicious website?</li>
+                    <li>Breached Sites: Has this site been breached in the past and had it's data stolen?</li>
+                    <li>2FA: Does this site support two factor authentication?</li>
+                    <li>HTTPS: Does this site use HTTPS?</li>
+                    <li>DNSSEC: Is this site making use of DNSSec?</li>
+                  </ul>
+                  <p>To analyze these parameters SecureRate uses various API's that have been vetted for security concerns.</p>
+                </div>
+              </div>
+            </div>
+
+    </div>
+  </div>
+{% endblock %}

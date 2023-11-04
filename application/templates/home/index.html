@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block metatags %}
+<title>SecureRate</title>
+<meta name="description" content="SecureRate - Your Privacy-Focused Cybersecurity Extension.">
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <h1 style="margin-top:37px;"><i class="bi bi-shield-lock-fill"></i> Welcome to SecureRate</h1>
+    <p class="lead">Your go-to cybersecurity extension that prioritizes your privacy.</p>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <h3><i class="bi bi-check-circle-fill"></i> Real-Time Assessment</h2>
+            <p>We provide real-time risk assessments of the websites you visit, ensuring your online safety.</p>
+        </div>
+        <div class="col-md-4">
+            <h3><i class="bi bi-star-fill"></i> Reputation Ratings</h2>
+            <p>Get to know the reputation of websites before you interact with them.</p>
+        </div>
+        <div class="col-md-4">
+            <h3><i class="bi bi-lightbulb-fill"></i> Smart Advice</h2>
+            <p>Receive tailored security advice based on the websites you visit.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h3><i class="bi bi-info-circle-fill"></i> Why Choose SecureRate?</h2>
+    <p>We value your privacy. All your data is stored locally, and we don't collect or share any of your information.</p>
+    <p><i class="bi bi-code-square"></i> Plus, we're FOSS! Contribute to our code <a href="https://gitlab.com/securerate/securerate" target="_blank">here</a>.</p>
+
+    <hr>
+
+    <p>Learn more <a href="{{url_for('bl_home.about')}}"><i class="bi bi-arrow-right-circle-fill"></i> about</a> SecureRate.</p>
+</div>
+{% endblock %}

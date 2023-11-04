@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SecureRate</title>
+    <link rel="stylesheet" href="./static/style.css" />
+    <link rel="icon" href="../icons/favicon.ico" alt="icon" />
+    <script src="./static/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./static/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1><img id="header-icon" src="../icons/icon48.png" alt="icon"/>  SecureRate v0.8</h1>
+        <script src="scripts/toggleOverlay.js"></script>
+      </div>
+      <div class="content">       
+        <div class="left-panel">
+          <h3><img class="small-icon" src="../icons/shield-xxl.png" alt="SecureRate Icon"/> SecureRate</h3>
+          <div id="score" class="alert grade"></div>
+        </div>
+        <div class="status-panel">
+          <h3><img class="small-icon" src="../icons/lock-xxl.png" alt="SecureStatus Icon"/> SecureStatus</h3>
+          <p class="toggle-overlay">Toggle Overlay:</p>
+          <label class="switch">
+            <div class="slider-container">
+              <input type="checkbox" id="overlayToggle">
+              <span class="slider round"></span>
+            </div>
+          </label>
+          <p>If you don't see the overlay change immediately after toggling, please refresh the page.</p>
+          <div id="securityStatus" class="alert"></div>
+        </div>
+        <div class="right-panel">
+          <h3><img class="small-icon" src="../icons/ok-xxl.png" alt="SecureAdvice Icon"/> SecureAdvice</h3>
+          <div id="recommendations" class="alert"></div>
+        </div>
+      </div>
+    </div>
+    <script src="scripts/initializeExtension.js"></script>
+    <script src="scripts/fetchPhishingData.js"></script>
+    <script src="scripts/fetchMaliciousData.js"></script>
+    <script src="scripts/fetchBreachedSitesData.js"></script>
+    <script src="scripts/fetch2FAData.js"></script>
+    <script src="scripts/websiteSecurityAnalysis.js"></script>
+    <script src="scripts/updateUserInterface.js"></script>
+    <script src="scripts/toggleOverlay.js"></script>
+  </body>
+</html>
