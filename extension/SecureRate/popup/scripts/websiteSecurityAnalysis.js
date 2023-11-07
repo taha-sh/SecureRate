@@ -4,184 +4,203 @@
  * @param {string} inputUrl - The URL of the website to analyze.
  * @returns {void}
  */
-
 async function analyzeWebsite(inputUrl) {
-    const url = new URL(inputUrl);
-    let isPhishingWebsite = false;
-    let isMaliciousWebsite = false;
-    let gradePoints = 0;
-    let maxGradePoints = 5;
-    let positiveRecommendations = [];
-    let negativeRecommendations = [];
+  // Parse the URL from the input to access different parts of it easily
+  const url = new URL(inputUrl);
+  // List of restricted protocols and resource identifiers
+  const restrictedPatterns = [
+    'chrome://',
+    'chrome-extension://',
+    'https://chrome.google.com/webstore/',
+    'chrome-error://',
+    'edge://',
+    'about:',
+    'brave://',
+    'opera://',
+    'vivaldi://',
+    'moz-extension://'
+  ];
+  // Check if the URL is in the restricted patterns list
+  if (restrictedPatterns.some(pattern => url.href.startsWith(pattern))) {
+    console.log('analyzeWebsite: URL is restricted and will not be analyzed:', url.href);
+    return; // Return early since the URL is restricted
+  }
 
-    let isBreached = await new Promise((resolve) => {
+  
+  // Initialize variables to keep track of website status and recommendations
+  let isPhishingWebsite = false;
+  let isMaliciousWebsite = false;
+  let gradePoints = 0;
+  let maxGradePoints = 5;
+  let positiveRecommendations = [];
+  let negativeRecommendations = [];
+
+  // Check if the website has been breached before
+  let isBreached = await new Promise((resolve) => {
+      // Repeatedly send messages to check breach status every 500ms
       const checkBreachedStatus = setInterval(() => {
-        chrome.runtime.sendMessage({ action: 'getBreached' }, function(response) {
-          if (response.value !== null) {
-            clearInterval(checkBreachedStatus);
-            resolve(response.value);
-          }
-        });
-      }, 500); // Check every 500 milliseconds
-    });
+          chrome.runtime.sendMessage({ action: 'getBreached' }, function(response) {
+              // Once a response is received, clear the interval and resolve the promise
+              if (response.value !== null) {
+                  clearInterval(checkBreachedStatus);
+                  resolve(response.value);
+              }
+          });
+      }, 500);
+  });
 
-    if (isBreached) {
+  // Based on breach status, update grade points and recommendations
+  if (isBreached) {
       gradePoints--;
       negativeRecommendations.push(
-        console.log("The website has been breached before."),
-        '<span style="color:orange; font-weight:bold;">This site has been breached in the past and sensitive information was stolen. Be cautious while entering any personal information.</span>'
+          '<span style="color:orange; font-weight:bold;">This site has been breached in the past and sensitive information was stolen. Be cautious while entering any personal information.</span>'
       );
-    } else {
-      console.log("The website has not been breached before.");
+  } else {
       positiveRecommendations.push("Be suspicious of anything that looks out of place on this site.");
-    }
+  }
   
-    if (url.protocol === "https:") {
+  // Check if the website uses HTTPS and update grade points and recommendations accordingly
+  if (url.protocol === "https:") {
       gradePoints++;
-      console.log("Website uses HTTPS.");
       positiveRecommendations.push("Always check for the lock icon in the address bar to ensure that the site is secure.");
-    } else {
+  } else {
       gradePoints--;
-      console.log("Website does not use HTTPS.");
       negativeRecommendations.push("This site is not secure. Do not put sensitive information on this site.");
-    }
+  }
   
-  
-    const hasDNSSEC = await checkDNSSEC(url.hostname);
-    if (hasDNSSEC) {
+  // Check if the website has DNSSEC enabled
+  const hasDNSSEC = await checkDNSSEC(url.hostname);
+  if (hasDNSSEC) {
       gradePoints++;
-      console.log("Website has DNSSEC enabled.");
       positiveRecommendations.push(
-        "This site has DNSSEC enabled, which adds an extra layer of trust. Be aware that this does not mean the site is secure."
+          "This site has DNSSEC enabled, which adds an extra layer of trust. Be aware that this does not mean the site is secure."
       );
-    } else {
-      console.log("Website does not have DNSSEC enabled.");
+  } else {
       negativeRecommendations.push(
-        "Be aware of phishing sites that may look like this site."
+          "Be aware of phishing sites that may look like this site."
       );
-    }
+  }
   
-    const hasCookies = await new Promise((resolve, reject) => {
+  // Check if the website has cookies
+  const hasCookies = await new Promise((resolve, reject) => {
       try {
-        chrome.cookies.getAll({ url: inputUrl.url }, function(cookies) {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError);
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve(cookies.length > 0);
-          }
-        });
+          // Get all cookies on the given URL
+          chrome.cookies.getAll({ url: inputUrl.url }, function(cookies) {
+              // Check for errors and reject the promise if found
+              if (chrome.runtime.lastError) {
+                  reject(chrome.runtime.lastError);
+              } else {
+                  // If there are cookies, resolve the promise as true
+                  resolve(cookies.length > 0);
+              }
+          });
       } catch (error) {
-        console.error(error);
-        reject(error);
+          // If there's an exception during the process, log the error and reject the promise
+          reject(error);
       }
-    }).catch(error => {
+  }).catch(error => {
+      // Handle the rejected promise from the cookies check
       console.error("An error occurred while checking for cookies:", error);
-    });
+  });
 
-    if (hasCookies) {
-      console.log("Website has cookies.");
-      positiveRecommendations.push(
-          "Make sure to use different passwords on different websites."
-      );
-    } else {
+  if (hasCookies) {
+      positiveRecommendations.push("Make sure to use different passwords on different websites.");
+  } else {
       negativeRecommendations.push("Use different passwords on this website.");
-    }
-    
+  }
   
-    if (
-      phishingWebsites.includes(url.hostname) ||
-      phishingWebsites.includes(url.host)
-    ) {
-      console.log("Website is a phishing website.");
-      negativeRecommendations.push(
-        "This site is a phishing site. Do not enter any information on this site."
-      );
+  // Check if the website is on a list of known phishing websites
+  if (phishingWebsites.includes(url.hostname) || phishingWebsites.includes(url.host)) {
+      negativeRecommendations.push("This site is a phishing site. Do not enter any information on this site.");
       isPhishingWebsite = true;
-    } else {
-      console.log("Website is not a phishing website.");
+  } else {
       gradePoints++;
-    }
+  }
   
-    if (
-      maliciousWebsites.includes(url.hostname) ||
-      maliciousWebsites.includes(url.host)
-    ) {
-      console.log("Website is a malicious website.");
+  // Check if the website is on a list of known malicious websites
+  if (maliciousWebsites.includes(url.hostname) || maliciousWebsites.includes(url.host)) {
       negativeRecommendations.push("This site is a malicious site. Be cautious and do not enter any sensitive information.");
       isMaliciousWebsite = true;
-    } else {
+  } else {
       gradePoints++;
-    }
+  }
 
-    const supports2FA = await new Promise((resolve) => {
+  // Check if the website supports 2-Factor Authentication (2FA)
+  const supports2FA = await new Promise((resolve) => {
       chrome.runtime.sendMessage({ action: 'get2FASupport' }, function(response) {
-        if (response && typeof response.value !== 'undefined') {
-          resolve(response.value);
-        } else {
-          console.log("No or incomplete response received for 2FA support.");
-          resolve(null);
-        }
+          if (response && typeof response.value !== 'undefined') {
+              resolve(response.value);
+          } else {
+              console.log("No or incomplete response received for 2FA support.");
+              resolve(null);
+          }
       });
-    });
-    
-    if (supports2FA === 'enabled') {
+  });
+  
+  // Update grade points based on 2FA support
+  if (supports2FA === 'enabled') {
       gradePoints++;
       positiveRecommendations.push("This site supports 2FA, which adds an extra layer of security.");
-    } else if (supports2FA === 'disabled') {
+  } else if (supports2FA === 'disabled') {
       gradePoints--;
       negativeRecommendations.push("This site does not support 2FA. Be cautious while entering any personal information.");
-    }
+  }
   
-    let grade;
-    if (isPhishingWebsite) {
+  // Determine the final grade of the website
+  let grade;
+  if (isPhishingWebsite) {
       grade = "E";
       negativeRecommendations = [
-        '<span style="color:red; font-weight:bold;">Be cautious! This website is on a list of known phishing sites. Do not enter any information here and leave immediately.</span>',
+          '<span style="color:red; font-weight:bold;">Be cautious! This website is on a list of known phishing sites. Do not enter any information here and leave immediately.</span>',
       ];
-    } else if (isMaliciousWebsite) {
+  } else if (isMaliciousWebsite) {
       grade = "D";
       negativeRecommendations = [
-        '<span style="color:orange; font-weight:bold;">Warning! This website is on a list of potentially malicious sites. Be careful and avoid entering sensitive information.</span>',
+          '<span style="color:orange; font-weight:bold;">Warning! This website is on a list of potentially malicious sites. Be careful and avoid entering sensitive information.</span>',
       ];
-    } else {
+  } else {
+      // Calculate the grade percentage based on points
       const gradePercent = (gradePoints / maxGradePoints) * 100;
+      // Assign a grade based on the calculated percentage
       if (gradePercent >= 75) {
-        grade = "A";
+          grade = "A";
       } else if (gradePercent >= 50) {
-        grade = "B";
+          grade = "B";
       } else if (gradePercent >= 25) {
-        grade = "C";
+          grade = "C";
       } else {
-        grade = "D";
+          grade = "D";
       }
-    }
+  }
 
-        
-       
+  // Combine and limit the number of recommendations
+  const combinedRecommendations = negativeRecommendations.concat(positiveRecommendations);
+  const limitedRecommendations = combinedRecommendations.slice(0, 3);
 
-    // Combine and limit the recommendations
-    const combinedRecommendations = negativeRecommendations.concat(positiveRecommendations);
-    const limitedRecommendations = combinedRecommendations.slice(0, 3);
-
-    updateUI(url, hasDNSSEC, hasCookies, grade, limitedRecommendations, isBreached, supports2FA);
-    chrome.runtime.sendMessage({ action: 'setGrade', value: grade });
-    chrome.storage.local.set({ websiteGrade: grade }, function() {
+  // Update the UI with the results and store the grade
+  updateUI(url, hasDNSSEC, hasCookies, grade, limitedRecommendations, isBreached, supports2FA);
+  chrome.runtime.sendMessage({ action: 'setGrade', value: grade });
+  chrome.storage.local.set({ websiteGrade: grade }, function() {
       console.log('Grade saved to storage:', grade);
-    });
-    
-  }
+  });
+}
 
-  
-  async function checkDNSSEC(domain) {
-    const dnsQueryUrl = `https://mozilla.cloudflare-dns.com/dns-query?name=${domain}&type=A`;
-    const response = await fetch(dnsQueryUrl, {
+/**
+* Check if the provided domain has DNSSEC enabled.
+* @param {string} domain - The domain to check.
+* @returns {Promise<boolean>} - True if DNSSEC is enabled, false otherwise.
+*/
+async function checkDNSSEC(domain) {
+  // Construct the URL to query DNS over HTTPS from Cloudflare
+  const dnsQueryUrl = `https://mozilla.cloudflare-dns.com/dns-query?name=${domain}&type=A`;
+  // Fetch the DNS response
+  const response = await fetch(dnsQueryUrl, {
       headers: {
-        Accept: "application/dns-json",
+          Accept: "application/dns-json",
       },
-    });
-    const data = await response.json();
-    return data.AD;
-  }
-
-
+  });
+  // Parse the response as JSON
+  const data = await response.json();
+  // Return the 'AD' flag which indicates if DNSSEC is enabled
+  return data.AD;
+}

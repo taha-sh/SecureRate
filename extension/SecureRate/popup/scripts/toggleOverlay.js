@@ -1,27 +1,38 @@
+// This script will set up the listener for the DOMContentLoaded event,
+// ensuring the code within only runs after the DOM has fully loaded.
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize the toggle state from storage
+  // Retrieve the 'overlayEnabled' state from the chrome's local storage.
   chrome.storage.local.get('overlayEnabled', function(data) {
-    const element = document.getElementById('overlayToggle');
-    if (element) {
-      element.checked = data.overlayEnabled || false;
+    // Access the toggle element in the DOM.
+    const overlayToggleElement = document.getElementById('overlayToggle');
+    // Check if the element exists to avoid null references.
+    if (overlayToggleElement) {
+      // Set the toggle state based on retrieved value, defaulting to false.
+      overlayToggleElement.checked = data.overlayEnabled || false;
+    } else {
+      // If the element does not exist, log an error for debugging.
+      console.error("Element with ID 'overlayToggle' not found.");
     }
   });
 
-  const element = document.getElementById('overlayToggle');
-  if (element) {
-    element.addEventListener('change', function(event) {
+  // Add an event listener for the change event on the toggle element.
+  const overlayToggleElement = document.getElementById('overlayToggle');
+  if (overlayToggleElement) {
+    overlayToggleElement.addEventListener('change', function(event) {
+      // Determine the checked state from the event target.
       const isChecked = event.target.checked;
+      // Save the new state back into chrome's local storage.
       chrome.storage.local.set({ overlayEnabled: isChecked });
+      // Query for the active tab in the current window to send a message.
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        // Send a message to the active tab with the new overlay state.
         chrome.tabs.sendMessage(tabs[0].id, { action: "toggleOverlay", overlayEnabled: isChecked });
 
-        // Send a message to the background script to execute injectoverlay.js
+        // If the overlay is enabled, instruct the background script to execute injectoverlay.js.
         if (isChecked) {
           chrome.runtime.sendMessage({ action: "executeInjectOverlay" });
         }
       });
     });
-  } else {
-    console.error("Element with ID 'overlayToggle' not found.");
   }
 });

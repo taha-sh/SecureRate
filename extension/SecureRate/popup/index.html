@@ -1,42 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Meta tags for encoding and responsive design -->
     <meta charset="UTF-8" />
-    <title>SecureRate</title>
+    <title>SecureRate</title> <!-- Title of the webpage -->
+
+    <!-- Link to external CSS for styles -->
     <link rel="stylesheet" href="./static/style.css" />
+    
+    <!-- Favicon for the tab icon -->
     <link rel="icon" href="../icons/favicon.ico" alt="icon" />
+    
+    <!-- Bootstrap JavaScript for components functionality (it should ideally be placed before closing body tag) -->
     <script src="./static/bootstrap.min.js"></script>
+    
+    <!-- Bootstrap CSS for styling components -->
     <link rel="stylesheet" href="./static/bootstrap.min.css" />
   </head>
   <body>
+    <!-- Container for the entire page content -->
     <div class="container">
+      <!-- Header section with logo and application version -->
       <div class="header">
         <h1><img id="header-icon" src="../icons/icon48.png" alt="icon"/>  SecureRate v0.8</h1>
+        <!-- External JS script for header-related functionality -->
         <script src="scripts/toggleOverlay.js"></script>
       </div>
+      <!-- Main content area -->
       <div class="content">       
+        <!-- Left panel for displaying the SecureRate score -->
         <div class="left-panel">
           <h3><img class="small-icon" src="../icons/shield-xxl.png" alt="SecureRate Icon"/> SecureRate</h3>
+          <!-- Placeholder for dynamic security score -->
           <div id="score" class="alert grade"></div>
         </div>
+        <!-- Middle panel for security status and toggling overlay -->
         <div class="status-panel">
           <h3><img class="small-icon" src="../icons/lock-xxl.png" alt="SecureStatus Icon"/> SecureStatus</h3>
           <p class="toggle-overlay">Toggle Overlay:</p>
+          <!-- Toggle switch for overlay -->
           <label class="switch">
             <div class="slider-container">
               <input type="checkbox" id="overlayToggle">
               <span class="slider round"></span>
             </div>
           </label>
+          <!-- Note to user about overlay functionality -->
           <p>If you don't see the overlay change immediately after toggling, please refresh the page.</p>
+          <!-- Placeholder for dynamic security status -->
           <div id="securityStatus" class="alert"></div>
         </div>
+        <!-- Right panel for displaying security recommendations -->
         <div class="right-panel">
           <h3><img class="small-icon" src="../icons/ok-xxl.png" alt="SecureAdvice Icon"/> SecureAdvice</h3>
+          <!-- Placeholder for dynamic security advice -->
           <div id="recommendations" class="alert"></div>
         </div>
       </div>
     </div>
+    <!-- External JS scripts for initializing the extension and handling data fetching and UI updates -->
     <script src="scripts/initializeExtension.js"></script>
     <script src="scripts/fetchPhishingData.js"></script>
     <script src="scripts/fetchMaliciousData.js"></script>

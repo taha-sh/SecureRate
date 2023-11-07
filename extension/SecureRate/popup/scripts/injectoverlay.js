@@ -1,190 +1,206 @@
+// Check if the overlay feature is enabled and then perform the corresponding actions
 chrome.storage.local.get("overlayEnabled", function (data) {
   if (data.overlayEnabled) {
-      document.addEventListener("DOMContentLoaded", function () {
-          console.log("DOMContentLoaded event fired in injectoverlay.js");
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("DOMContentLoaded event fired in injectoverlay.js");
 
-          // Initialize overlay
-          let overlay = document.getElementById("my-extension-overlay");
-          if (!overlay) {
-              overlay = document.createElement("div");
-              overlay.id = "my-extension-overlay";
-              overlay.style.position = "fixed";
-              overlay.style.top = "0";
-              overlay.style.right = "0";
-              overlay.style.zIndex = "9999";
-              overlay.style.backgroundColor = "#fff";
-              overlay.style.color = "#000";
-              overlay.style.padding = "10px";
-              overlay.style.border = "1px solid #ccc";
-              overlay.style.borderRadius = "5px";
-              document.body.appendChild(overlay);
-          }
+      // Attempt to get the overlay if it already exists in the document
+      let overlay = document.getElementById("my-extension-overlay");
+      
+      // If it doesn't exist, create it and set its styles and attributes
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "my-extension-overlay";
+        // Set a multitude of styles to ensure the overlay appears consistently
+        Object.assign(overlay.style, {
+          position: "fixed",
+          top: "0",
+          right: "0",
+          zIndex: "9999",
+          backgroundColor: "#fff",
+          color: "#000",
+          padding: "10px",
+          border: "1px solid #ccc",
+          borderRadius: "5px"
+        });
+        document.body.appendChild(overlay); // Append the newly created overlay to the body
+      }
 
-          overlay.innerHTML = "Loading...";
+      // Set the overlay's content while data is being processed
+      overlay.innerHTML = "Loading...";
 
-          // Analyze the website
-          const currentUrl = window.location.href;
-          setTimeout(async () => {
-              const grade = await analyzeWebsite(currentUrl);
-              updateOverlay(grade, getColorForGrade(grade));
-          }, 250);
-      });
+      // Perform the website analysis after a slight delay to ensure it doesn't block the UI
+      const currentUrl = window.location.href;
+      setTimeout(async () => {
+        const grade = await analyzeWebsite(currentUrl); // Analyze the current website
+        updateOverlay(grade, getColorForGrade(grade));  // Update the overlay with the results
+      }, 250);
+    });
 
-      // Listen for messages from popup to toggle overlay
-      chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-          if (request.action === "toggleOverlay") {
-              const overlay = document.getElementById("my-extension-overlay");
-              if (overlay) {
-                  overlay.style.display = request.overlayEnabled ? "block" : "none";
-              }
-          }
-      });
+    // Listen for messages from the popup or other parts of the extension
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.action === "toggleOverlay") {
+        const overlay = document.getElementById("my-extension-overlay");
+        // If the overlay exists, toggle its display based on the message received
+        if (overlay) {
+          overlay.style.display = request.overlayEnabled ? "block" : "none";
+        }
+      }
+       if (request.action === 'ping') {
+        sendResponse('pong');
+      }
+    });
   }
 });
 
+// Function that analyzes the given URL to determine website security status
 async function analyzeWebsite(inputUrl) {
-    console.log("Starting website analysis...");
-  
-    const url = new URL(inputUrl);
-    let isPhishingWebsite = false;
-    let isMaliciousWebsite = false;
-    let gradePoints = 0;
-    let maxGradePoints = 5;
-  
-    let isBreached = await new Promise((resolve) => {
-      const checkBreachedStatus = setInterval(() => {
-        chrome.runtime.sendMessage({ action: 'getBreached' }, function(response) {
-          if (response.value !== null) {
-            clearInterval(checkBreachedStatus);
-            resolve(response.value);
-          }
-        });
-      }, 500); // Check every 500 milliseconds
-    });
-  
-    if (isBreached) {
-      console.log("The website has been breached before.");
-      gradePoints--;
-    }
-  
-    if (url.protocol === "https:") {
-      console.log("Website uses HTTPS.");
-      gradePoints++;
-    } else {
-      console.log("Website does not use HTTPS.");
-      gradePoints--;
-    }
-  
-    const supports2FA = await new Promise((resolve) => {
-      chrome.runtime.sendMessage({ action: 'get2FASupport' }, function(response) {
-        if (response && typeof response.value !== 'undefined') {
-          resolve(response.value);
-        } else {
-          console.log("No or incomplete response received for 2FA support.");
-          resolve(null);
+  // Parse the URL and initialize analysis variables
+  const url = new URL(inputUrl);
+  let isPhishingWebsite = false;
+  let isMaliciousWebsite = false;
+  let gradePoints = 0;
+  const maxGradePoints = 5;
+
+  // Check if the website has been previously breached
+  let isBreached = await new Promise((resolve) => {
+    const checkBreachedStatus = setInterval(() => {
+      chrome.runtime.sendMessage({ action: 'getBreached' }, function(response) {
+        if (response.value !== null) {
+          clearInterval(checkBreachedStatus); // Stop checking once a response is received
+          resolve(response.value); // Resolve the promise with the response value
         }
       });
-    });
-    
-    if (supports2FA === 'enabled') {
-      gradePoints++;
-    } else if (supports2FA === 'disabled') {
-      gradePoints--;
-    }
+    }, 500); // Repeat check every 500ms
+  });
 
-    const hasDNSSEC = await checkDNSSEC(url.hostname);
-    if (hasDNSSEC) {
-      console.log("Website has DNSSEC.");
-      gradePoints++;
-    }
-  
-    if (
-      window.phishingWebsites && 
-      (window.phishingWebsites.includes(url.hostname) ||
-      window.phishingWebsites.includes(url.host))
-    ) {
-      console.log("Website is a phishing website.");
-      isPhishingWebsite = true;
-    } else {
-      gradePoints++;
-    }
-    
-    if (
-      window.maliciousWebsites &&
-      (window.maliciousWebsites.includes(url.hostname) ||
-      window.maliciousWebsites.includes(url.host))
-    ) {
-      console.log("Website is a malicious website.");
-      isMaliciousWebsite = true;
-    } else {
-      gradePoints++;
-    }
-  
-    let grade;
-    if (isPhishingWebsite) {
-      grade = "E";
-    } else if (isMaliciousWebsite) {
-      grade = "D";
-    } else {
-      const gradePercent = (gradePoints / maxGradePoints) * 100;
-      if (gradePercent >= 75) {
-        grade = "A";
-      } else if (gradePercent >= 50) {
-        grade = "B";
-      } else if (gradePercent >= 25) {
-        grade = "C";
-      } else {
-        grade = "D";
-      }
-    }
-  
-    console.log(`Final grade for the website is: ${grade}`);
-    return grade;
+  // Assign points and log results based on breach status
+  if (isBreached) {
+    gradePoints--;
+    console.log("The website has been breached before.");
+  } else {
+    console.log("The website has not been breached before.");
   }
-  
 
+  // Check for secure (HTTPS) protocol usage and assign points accordingly
+  if (url.protocol === "https:") {
+    gradePoints++;
+    console.log("Website uses HTTPS.");
+  } else {
+    gradePoints--;
+    console.log("Website does not use HTTPS.");
+  }
+
+  // Check for DNSSEC status and assign points
+  const hasDNSSEC = await checkDNSSEC(url.hostname);
+  if (hasDNSSEC) {
+    gradePoints++;
+    console.log("Website has DNSSEC enabled.");
+  } else {
+    console.log("Website does not have DNSSEC enabled.");
+  }
+
+  // Check for phishing status and assign points
+  if (window.phishingWebsites && (window.phishingWebsites.includes(url.hostname) || window.phishingWebsites.includes(url.host))) {
+    isPhishingWebsite = true;
+    console.log("Website is a phishing website.");
+  } else {
+    gradePoints++;
+  }
+
+  // Check for malicious website status and assign points
+  if (window.maliciousWebsites && (window.maliciousWebsites.includes(url.hostname) || window.maliciousWebsites.includes(url.host))) {
+    isMaliciousWebsite = true;
+    console.log("Website is a malicious website.");
+  } else {
+    gradePoints++;
+  }
+
+  // Check if the website supports Two-Factor Authentication (2FA)
+  const supports2FA = await new Promise((resolve) => {
+    chrome.runtime.sendMessage({ action: 'get2FASupport' }, function(response) {
+      if (response && typeof response.value !== 'undefined') {
+        resolve(response.value); // Resolve with the 2FA support status
+      } else {
+        console.log("No or incomplete response received for 2FA support.");
+        resolve(null);
+      }
+    });
+  });
+
+  // Assign points based on 2FA support
+  if (supports2FA === 'enabled') {
+    gradePoints++;
+  } else if (supports2FA === 'disabled') {
+    gradePoints--;
+  }
+
+  // Determine the final grade based on analysis results
+  let grade;
+  if (isPhishingWebsite) {
+    grade = "E";
+  } else if (isMaliciousWebsite) {
+    grade = "D";
+  } else {
+    const gradePercent = (gradePoints / maxGradePoints) * 100;
+    // Assign a letter grade based on the percentage of max points achieved
+    if (gradePercent >= 75) {
+      grade = "A";
+    } else if (gradePercent >= 50) {
+      grade = "B";
+    } else if (gradePercent >= 25) {
+      grade = "C";
+    } else {
+      grade = "D";
+    }
+  }
+
+  console.log(`Final grade for the website is: ${grade}`);
+  return grade;
+}
+
+// Function to determine color associated with a security grade
 function getColorForGrade(grade) {
   switch (grade) {
-      case "A":
-          return "#256720";
-      case "B":
-          return "#256720";
-      case "C":
-          return "#FF6800";
-      case "D":
-          return "#FFA500";
-      case "E":
-      default:
-          return "#FF0000";
+    case "A":
+      return "#256720"; // Green for good security
+    case "B":
+      return "#256720"; // Green, but a lower grade than A
+    case "C":
+      return "#FF6800"; // Orange for average security
+    case "D":
+      return "#FFA500"; // Darker orange for poor security
+    case "E":
+    default:
+      return "#FF0000"; // Red for high risk or failed security
   }
 }
 
-async function checkDNSSEC(domain) {
-  const dnsQueryUrl = `https://mozilla.cloudflare-dns.com/dns-query?name=${domain}&type=A`;
-  const response = await fetch(dnsQueryUrl, {
-      headers: {
-          Accept: "application/dns-json",
-      },
-  });
-  const data = await response.json();
-  return data.AD;
-}
-
+// Function to update the overlay with the security grade and corresponding color
 function updateOverlay(grade, color) {
+  // Create a new span element to hold the grade
   const gradeSpan = document.createElement("span");
-  gradeSpan.style.color = color;
-  gradeSpan.innerText = grade;
+  gradeSpan.style.color = color; // Set the text color based on the grade
+  gradeSpan.textContent = `Website Grade: ${grade}`; // Text content showing the grade
 
   const overlay = document.getElementById("my-extension-overlay");
-  overlay.innerHTML = "Security Grade: ";
-  overlay.appendChild(gradeSpan);
+  if (overlay) {
+    overlay.innerHTML = ""; // Clear any previous content
+    overlay.appendChild(gradeSpan); // Add the new grade information
 
-  overlay.onclick = function () {
-      overlay.style.opacity = overlay.style.opacity !== "0.5" ? "0.5" : "1";
-  };
+    // Add a click event listener to make the overlay transparent
+    overlay.onclick = function() {
+      if (this.style.opacity === "0.5") {
+        this.style.opacity = "1"; // If it's already transparent, clicking makes it opaque
+      } else {
+        this.style.opacity = "0.5"; // If it's opaque, clicking makes it transparent
+      }
+    };
 
-  overlay.ondblclick = function () {
-      overlay.style.display =
-          overlay.style.display !== "none" ? "none" : "block";
-  };
+    // Add a double-click event listener to remove the overlay
+    overlay.ondblclick = function() {
+      this.style.display = "none"; // Hide the overlay
+    };
+  }
 }
+

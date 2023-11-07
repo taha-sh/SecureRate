@@ -1,73 +1,83 @@
+/* Basic styling for the body and html to reset default browser padding/margin, set font, background, and control the overall layout size */
 body,
 html {
   margin: 0;
   padding: 0;
   font-family: "Arial", sans-serif;
-  background-color: #4d4949;
-  width: 400px;
-  height: 600px;
-  overflow: hidden;
-  font-size: 11px; /* Increased by 10% */
+  background-color: #4d4949; /* Dark gray background */
+  width: 400px; /* Fixed width for the layout */
+  height: 600px; /* Fixed height for the layout */
+  overflow: hidden; /* Hide any overflow content */
+  font-size: 11px; /* Base font size for the document */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Use flexbox layout, in column direction */
 }
 
+/* Container for sections, with padding and flexible layout */
 .container {
-  padding: 3px; /* Increased by 10% */
-  flex: 1;
+  padding: 3px;
+  flex: 1; /* Flex grow to take available space */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Stack children in a column */
 }
 
+/* Header styles for a centered title with background and text color */
 .header {
-  text-align: center;
-  background-color: #ffffff;
-  color: #4d4949;
-  padding: 3px; /* Increased by 10% */
+  text-align: center; /* Center-align text */
+  background-color: #ffffff; /* White background */
+  color: #4d4949; /* Dark gray text */
+  padding: 3px;
 }
 
+/* Style for images within the header, with fixed width and height */
 .header img {
-  width: 27px; /* Increased by 10% */
-  height: 27px; /* Increased by 10% */
+  width: 27px;
+  height: 27px;
 }
 
+/* Common panel styles for left, right, and status panels with padding, margin, rounded corners, and shadow for depth */
 .left-panel,
 .right-panel,
 .status-panel {
-  padding: 3px; /* Increased by 10% */
-  background-color: #faf2e3;
+  padding: 3px;
+  background-color: #faf2e3; /* Light background for panels */
   margin: 2px;
-  border-radius: 3px; /* Increased by 10% */
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  flex: 0.8;
-  overflow: auto;
+  border-radius: 3px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  flex: 0.8; /* Flex basis for size and grow at a ratio of 0.8 */
+  overflow: auto; /* Allow scrolling within panels */
 }
 
+/* Alert styles for warning or info messages */
 .alert {
-  padding: 3px; /* Increased by 10% */
+  padding: 3px;
   margin: 2px 0;
-  border-radius: 3px; /* Increased by 10% */
-  font-size: 11px; /* Increased by 10% */
+  border-radius: 3px;
+  font-size: 11px; /* Matches base font size */
 }
 
+/* Grade class for larger font size, used for displaying important numbers or statuses */
 .grade {
-  font-size: 26px; /* Increased by 10% */
+  font-size: 26px;
 }
 
+/* Switch styling for toggle buttons, positioning and sizing */
 .switch {
   position: relative;
   display: inline-block;
-  width: 44px; /* Increased by 10% */
-  height: 22px; /* Increased by 10% */
-  margin-left: 6px; /* Increased by 10% */
+  width: 44px;
+  height: 22px;
+  margin-left: 6px;
 }
 
+/* Hide the default HTML checkbox input */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
+/* Custom slider styling for the toggle switch */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -75,46 +85,51 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 22px; /* Increased by 10% */
+  background-color: #ccc; /* Default slider color */
+  transition: 0.4s; /* Smooth transition for sliding effect */
+  border-radius: 22px;
 }
 
+/* Slider knob styles */
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px; /* Increased by 10% */
-  width: 18px; /* Increased by 10% */
+  height: 18px;
+  width: 18px;
   left: 2px;
   bottom: 2px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
+  background-color: white; /* Knob color */
+  transition: 0.4s; /* Transition for sliding effect */
+  border-radius: 50%; /* Circular shape */
 }
 
+/* Color change when the switch is checked */
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: #2196f3; /* Blue background for checked state */
 }
 
+/* Position change for the slider knob when checked */
 input:checked + .slider:before {
-  transform: translateX(22px); /* Increased by 10% */
+  transform: translateX(22px); /* Slide to the right */
 }
 
+/* Styling for labels or text accompanying the toggle switch */
 .toggle-overlay {
-  font-size: 11px; /* Increased by 10% */
+  font-size: 11px;
   font-weight: bold;
   display: inline-block;
 }
 
+/* Container for the slider to align with inline elements properly */
 .slider-container {
   display: inline-block;
   vertical-align: middle;
 }
 
+/* Small icon sizes */
 .small-icon {
-  width: 16px;  /* Adjust size as needed */
-  height: 16px; /* Adjust size as needed */
-  vertical-align: middle;
-  margin-right: 4px;
+  width: 16px; /* Fixed width for small icons */
+  height: 16px; /* Fixed height for small icons */
+  vertical-align: middle; /* Align with text or inline elements */
+  margin-right: 4px; /* Space after icon before text or other content */
 }
-
