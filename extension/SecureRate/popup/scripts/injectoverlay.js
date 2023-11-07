@@ -204,3 +204,22 @@ function updateOverlay(grade, color) {
   }
 }
 
+/**
+* Check if the provided domain has DNSSEC enabled.
+* @param {string} domain - The domain to check.
+* @returns {Promise<boolean>} - True if DNSSEC is enabled, false otherwise.
+*/
+async function checkDNSSEC(domain) {
+  // Construct the URL to query DNS over HTTPS from Cloudflare
+  const dnsQueryUrl = `https://mozilla.cloudflare-dns.com/dns-query?name=${domain}&type=A`;
+  // Fetch the DNS response
+  const response = await fetch(dnsQueryUrl, {
+      headers: {
+          Accept: "application/dns-json",
+      },
+  });
+  // Parse the response as JSON
+  const data = await response.json();
+  // Return the 'AD' flag which indicates if DNSSEC is enabled
+  return data.AD;
+}

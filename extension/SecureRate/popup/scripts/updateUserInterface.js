@@ -73,7 +73,7 @@ function updateSecurityStatusDisplay(url, hasDNSSEC, hasCookies, isBreached, sup
     `Malicious: ${getSecurityStatusHTML(!maliciousWebsites.includes(url.hostname), 'Safe', 'Unsafe')}`,
     `SSL: ${getSecurityStatusHTML(url.protocol === "https:", 'Enabled', 'Disabled')}`,
     `DNSSEC: ${getSecurityStatusHTML(hasDNSSEC, 'Enabled', 'Disabled')}`,
-    `Data Breach: ${getSecurityStatusHTML(!isBreached, 'No Issues Found', 'Confirmed')}`,
+    `Data Breach: ${getSecurityStatusHTML(!isBreached, 'No Breach Found', 'Confirmed Breach')}`,
     `2FA: ${format2FAStatus(supports2FA)}`,
     `Cookies: ${hasCookies ? "Enabled" : "Disabled"}`
   ];
