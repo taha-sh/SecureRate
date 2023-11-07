@@ -19,10 +19,9 @@ It depends on:
 - [2FA Directory's API](https://2fa.directory/api/): to check whether a website has 2FA enabled.
 - [Mozilla's Cloudflare Resolver](https://developers.cloudflare.com/1.1.1.1/privacy/cloudflare-resolver-firefox/): to check whether has DNSSec enabled.
 
-It further makes use of some Malware-Filter's (uBlock Origin):
+It further makes use of some Malware-Filter's (uBlock Origin, AdGuard etc.) filter lists:
 - [Malicious URL list](https://gitlab.com/malware-filter/urlhaus-filter)
 - [Phishing URL list](https://gitlab.com/malware-filter/phishing-filter)
-It routinely checks them to stay relevant.
 
 ## Installation
 Python is required for this project to be able to run along with [pip](https://pip.pypa.io/en/stable/).
