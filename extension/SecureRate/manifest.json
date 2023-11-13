@@ -11,17 +11,11 @@
     "tabs",
     "cookies"
   ],
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*",
-    "https://mozilla.cloudflare-dns.com/*",
-    "https://haveibeenpwned.com/*",
-    "https://malware-filter.gitlab.io/*",
-    "https://api.2fa.directory/*"
-  ],
+
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["http://*/*",
+      "https://*/*"],
       "js": ["popup/scripts/updateUserInterface.js", "popup/scripts/injectoverlay.js"],
       "run_at": "document_start"    }
   ],
