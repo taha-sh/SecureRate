@@ -37,19 +37,23 @@ chrome.storage.local.get("overlayEnabled", function (data) {
       }, 250);
     });
 
-    // Listen for messages from the popup or other parts of the extension
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.action === "toggleOverlay") {
-        const overlay = document.getElementById("my-extension-overlay");
-        // If the overlay exists, toggle its display based on the message received
-        if (overlay) {
-          overlay.style.display = request.overlayEnabled ? "block" : "none";
+      // Listen for messages from the popup or other parts of the extension
+      chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        // Respond to 'ping' messages to confirm the script is active
+        if (request.action === 'ping') {
+          sendResponse('pong');
+        }
+
+        // Respond to 'toggleOverlay' messages to toggle the overlay
+        if (request.action === 'toggleOverlay') {
+          const overlay = document.getElementById("my-extension-overlay");
+          if (overlay) {
+            // If the overlay exists, set its display style to 'none' to hide it
+            overlay.style.display = request.overlayEnabled ? "block" : "none";
+          }
         }
       }
-       if (request.action === 'ping') {
-        sendResponse('pong');
-      }
-    });
+    );
   }
 });
 

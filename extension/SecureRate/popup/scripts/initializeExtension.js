@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // If an error occurs during URL object creation, it is silently caught
       }
     } else {
-      // This block is reached if there are no active tabs or the active tab doesn't have a URL
-      // You can handle this case if needed
+      // If the tab does not exist or it does not have a URL, display an error message
+      document.getElementById('errorMessage').innerText = 'Unable to retrieve the current tab\'s URL.';
     }
   });
 });

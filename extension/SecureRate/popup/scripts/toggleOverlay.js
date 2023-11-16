@@ -23,14 +23,21 @@ document.addEventListener("DOMContentLoaded", function () {
       const isChecked = event.target.checked;
       // Save the new state back into chrome's local storage.
       chrome.storage.local.set({ overlayEnabled: isChecked });
+
       // Query for the active tab in the current window to send a message.
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        // Send a message to the active tab with the new overlay state.
-        chrome.tabs.sendMessage(tabs[0].id, { action: "toggleOverlay", overlayEnabled: isChecked });
+        try {
+          // Send a message to the active tab with the new overlay state.
+          chrome.tabs.sendMessage(tabs[0].id, { action: "toggleOverlay", overlayEnabled: isChecked }, function(response) {
+            console.log("Response received:", response);
+          });
 
-        // If the overlay is enabled, instruct the background script to execute injectoverlay.js.
-        if (isChecked) {
-          chrome.runtime.sendMessage({ action: "executeInjectOverlay" });
+          // If the overlay is enabled, instruct the background script to execute injectoverlay.js.
+          if (isChecked) {
+            chrome.runtime.sendMessage({ action: "executeInjectOverlay" });
+          }
+        } catch (error) {
+          console.error("Error sending message:", error);
         }
       });
     });

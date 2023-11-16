@@ -5,13 +5,15 @@
   "manifest_version": 3,
   "permissions": [
     "storage",
-    "declarativeContent",
     "activeTab",
     "scripting",
     "tabs",
     "cookies"
   ],
-
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
   "content_scripts": [
     {
       "matches": ["http://*/*",
@@ -43,8 +45,8 @@
         "popup/scripts/fetch2FAData.js",
         "popup/scripts/websiteSecurityAnalysis.js",
         "popup/scripts/updateUserInterface.js",
-        "popup/scripts/injectoverlay.js",
         "popup/scripts/toggleOverlay.js",
+        "popup/scripts/injectoverlay.js",
         "icons/*"
       ],
       "matches": [

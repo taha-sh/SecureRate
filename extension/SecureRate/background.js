@@ -55,8 +55,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             'popup/scripts/fetch2FAData.js',
             'popup/scripts/websiteSecurityAnalysis.js',
             'popup/scripts/updateUserInterface.js',
-            'popup/scripts/injectOverlay.js',
             'popup/scripts/toggleOverlay.js',
+            'popup/scripts/injectOverlay.js'
           ];
 
           // Execute the array of scripts
@@ -128,7 +128,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse({ value: supports2FA });
       break;
 
-
       case 'executeInjectOverlay':
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
           if (tabs.length === 0) {
@@ -138,15 +137,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               target: { tabId: tabs[0].id },
               files: ['popup/scripts/injectoverlay.js']
             }, () => {
-              // Check for any error thrown by the executeScript method
               if (chrome.runtime.lastError) {
-                sendResponse({ error: 'Error injecting script' });
+                console.error(`Error injecting overlay script. Error: ${chrome.runtime.lastError.message}, Tab ID: ${tabs[0].id}`);
+                sendResponse({ error: `Error injecting script: ${chrome.runtime.lastError.message}` });
                 return;
               }
               // Ping the content script to see if it is ready
               chrome.tabs.sendMessage(tabs[0].id, { action: 'ping' }, response => {
                 if (chrome.runtime.lastError || response !== 'pong') {
-                  sendResponse({ error: 'Content script not ready' });
+                  console.error(`Content script not ready or error occurred. Error: ${chrome.runtime.lastError ? chrome.runtime.lastError.message : 'No response to ping'}, Tab ID: ${tabs[0].id}`);
+                  sendResponse({ error: 'Content script not ready or no response to ping' });
                 } else {
                   sendResponse({ status: 'Overlay injected and content script ready' });
                 }
@@ -156,15 +156,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({ error: 'URL does not match content script pattern' });
           }
         });
-        return true; // Indicate that we want to send an asynchronous response
-
-        default:
-          console.log('Unrecognized action:', request.action);
-          sendResponse({ error: 'Unrecognized action' });
-          break;
-      }
+        return true; // Asynchronous response
+  
+      default:
+        console.log(`Unrecognized action: ${request.action}`);
+        sendResponse({ error: 'Unrecognized action' });
+        break;
+    }
     } catch (error) {
-      console.log('Error occurred in message listener:', error);
+      console.error(`Error occurred in message listener. Error: ${error.message}, Action: ${request.action}, Sender: ${sender.url}`);
       sendResponse({ error: error.message || 'An error occurred' });
       return false;
     }

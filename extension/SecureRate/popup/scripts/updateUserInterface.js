@@ -21,8 +21,6 @@ function updateUI(url, hasDNSSEC, hasCookies, grade, recommendations, isBreached
     updateRecommendationsDisplay(recommendations);
     updateSecurityStatusDisplay(url, hasDNSSEC, hasCookies, isBreached, supports2FA);
 
-    // Send the grade to the background process of the browser extension
-    chrome.runtime.sendMessage({ grade: grade });
 
     // Log the 2FA status for debugging purposes
     console.log("2FA status in updateUserInterface.js:", supports2FA);
