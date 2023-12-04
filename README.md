@@ -1,6 +1,6 @@
 # SecureRate
 
-SecureRate is a web extension designed to enhance online security by providing users with a rating on various security aspects. This project includes a website for installing the extension and the extension itself.
+SecureRate is a web extension designed to enhance online security by providing users with a rating on various security aspects. 
 
 ![Get it on Chrome](https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png)
 
