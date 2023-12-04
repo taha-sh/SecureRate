@@ -85,7 +85,11 @@ async function analyzeWebsite(inputUrl) {
   const hasCookies = await new Promise((resolve, reject) => {
       try {
           // Get all cookies on the given URL
-          chrome.cookies.getAll({ url: inputUrl.url }, function(cookies) {
+          chrome.cookies.getAll({ url: inputUrl }, function(cookies) {
+            chrome.runtime.sendMessage({ action: "checkCookies", url: window.location.href }, function(response) {
+                console.log("Cookies response:", response);
+              });
+              
               // Check for errors and reject the promise if found
               if (chrome.runtime.lastError) {
                   reject(chrome.runtime.lastError);

@@ -30,7 +30,6 @@ function isInjectable(url) {
 }
 
 function urlMatchesContentScriptPattern(url) {
-  // This is a generic pattern, update it to match the patterns you are using
   const patterns = [
     'https://*/*',
     'http://*/*',
@@ -55,6 +54,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             'popup/scripts/fetch2FAData.js',
             'popup/scripts/websiteSecurityAnalysis.js',
             'popup/scripts/updateUserInterface.js',
+<<<<<<< Updated upstream
+=======
+            'popup/scripts/injectoverlay.js',
+>>>>>>> Stashed changes
             'popup/scripts/toggleOverlay.js',
             'popup/scripts/injectOverlay.js'
           ];
@@ -169,3 +172,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return false;
     }
   });
+
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === "checkCookies") {
+      chrome.cookies.getAll({ url: request.url }, function(cookies) {
+        if (chrome.runtime.lastError) {
+          sendResponse({ error: chrome.runtime.lastError.message });
+        } else {
+          sendResponse({ cookies: cookies });
+        }
+      });
+      return true; // Indicates that the response is sent asynchronously
+    }
+  });
+  

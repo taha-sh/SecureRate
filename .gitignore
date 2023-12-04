@@ -3,11 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
 *.so
 *.pem
 *.key
-
+.application/
 
 # Distribution / packaging
 .Python
@@ -118,5 +117,5 @@ dmypy.json
 .pyre/
 
 *.code-workspace
-
+venv/
 *.vscode/

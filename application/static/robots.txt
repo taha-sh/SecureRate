@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://minimal.variancedigital.com/sitemap.xml

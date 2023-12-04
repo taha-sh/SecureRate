@@ -1,5 +1,4 @@
 // This script will set up the listener for the DOMContentLoaded event,
-// ensuring the code within only runs after the DOM has fully loaded.
 document.addEventListener("DOMContentLoaded", function () {
   // Retrieve the 'overlayEnabled' state from the chrome's local storage.
   chrome.storage.local.get('overlayEnabled', function(data) {

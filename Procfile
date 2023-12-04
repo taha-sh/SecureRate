@@ -1,1 +1,0 @@
-web: gunicorn "minimal:create_app()"

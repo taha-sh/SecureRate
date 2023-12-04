@@ -7,19 +7,25 @@
     "storage",
     "activeTab",
     "scripting",
-    "tabs",
-    "cookies"
-  ],
+    "tabs"
+      ],
   "host_permissions": [
     "http://*/*",
     "https://*/*"
   ],
+<<<<<<< Updated upstream
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+=======
+>>>>>>> Stashed changes
   "content_scripts": [
     {
-      "matches": ["http://*/*",
-      "https://*/*"],
+      "matches": ["*://*/*"],
       "js": ["popup/scripts/updateUserInterface.js", "popup/scripts/injectoverlay.js"],
-      "run_at": "document_start"    }
+      "run_at": "document_start"
+    }
   ],
   "action": {
     "default_popup": "popup/index.html",
