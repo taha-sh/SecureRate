@@ -1,8 +1,6 @@
-# SecureRate
+# SecureRate (Archived)
 
 SecureRate is a web extension designed to enhance online security by providing users with a rating on various security aspects. 
-
-[![Get it on Chrome](https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png)](https://chrome.google.com/webstore/detail/securerate/aijifjemahdbblgmcddikkmlgkcilabl)
 
 ## Features
 
@@ -25,12 +23,8 @@ It also uses some Malware-Filter's (uBlock Origin, AdGuard, etc.) filter lists:
 
 To install SecureRate:
 
-### From the Chrome Web Store
 
-1. Visit the [SecureRate extension page](https://chromewebstore.google.com/detail/securerate/aijifjemahdbblgmcddikkmlgkcilabl) on the Chrome Web Store.
-2. Click on "Add to Chrome" to install.
-
-### Manual Installation (Advanced)
+### Manual Installation 
 
 1. Clone the repository or download the extension files.
 2. Open Chrome and navigate to `chrome://extensions/`.
@@ -44,3 +38,7 @@ To install SecureRate:
 This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).
 
 ---
+
+### ARCHIVED:
+This extension will no longer be maintained as this was made in an attempt to learn about Chrome Extensions.
+It should continue to work and anyone who desires to take it over is free to do so without permission.
